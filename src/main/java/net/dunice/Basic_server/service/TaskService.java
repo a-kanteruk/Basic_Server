@@ -23,4 +23,37 @@ public class TaskService {
         taskRepo.deleteById(id);
         return id;
     }
+
+    public String deleteAllTasks(){
+        taskRepo.deleteAll();
+        return "All tasks are removed.";
+    }
+
+    public TaskEntity updateTaskStatus(Long id, TaskEntity task){
+        if (taskRepo.findById(id) == null){
+            return null;
+        }
+        TaskEntity someTask = taskRepo.findById(id).get();
+        someTask.setTaskStatus(task.getTaskStatus());
+        taskRepo.save(someTask);
+        return someTask;
+    }
+
+    public TaskEntity updateTaskText(Long id, TaskEntity task){
+        if (taskRepo.findById(id) == null){
+            return null;
+        }
+        TaskEntity someTask = taskRepo.findById(id).get();
+        someTask.setText(task.getText());
+        taskRepo.save(someTask);
+        return someTask;
+    }
+
+    public String updateStatusAllTasks(TaskEntity task){
+        for (TaskEntity item: taskRepo.findAll()){
+            item.setTaskStatus(task.getTaskStatus());
+            taskRepo.save(item);
+        }
+        return "All tasks changed.";
+    }
 }
