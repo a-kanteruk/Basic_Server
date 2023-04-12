@@ -1,4 +1,4 @@
-package net.dunice.Basic_server;
+package net.dunice.basic_server;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

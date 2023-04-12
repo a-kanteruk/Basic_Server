@@ -1,4 +1,4 @@
-package net.dunice.Basic_server.entity;
+package net.dunice.basic_server.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

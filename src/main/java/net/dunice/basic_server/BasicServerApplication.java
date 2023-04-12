@@ -1,4 +1,4 @@
-package net.dunice.Basic_server;
+package net.dunice.basic_server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
