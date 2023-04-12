@@ -1,6 +1,9 @@
 package net.dunice.Basic_server.controller;
 
-import net.dunice.Basic_server.entity.TaskEntity;
+import jakarta.validation.Valid;
+import net.dunice.Basic_server.dto.ChangeStatusTodoDto;
+import net.dunice.Basic_server.dto.ChangeTextTodoDto;
+import net.dunice.Basic_server.dto.CreateTodoDto;
 import net.dunice.Basic_server.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +16,7 @@ public class TaskController {
     private TaskService taskService;
 
     @PostMapping
-    public ResponseEntity addTask(@RequestBody TaskEntity task){
+    public ResponseEntity addTask(@RequestBody @Valid CreateTodoDto task){
         try{
             taskService.addTask(task);
             return ResponseEntity.ok("Your task added.");
@@ -50,27 +53,27 @@ public class TaskController {
     }
 
     @PatchMapping("/status/{id}")
-    public ResponseEntity updateTaskStatus(@PathVariable Long id, @RequestBody TaskEntity newTask){
+    public ResponseEntity updateTaskStatus(@PathVariable Long id, @RequestBody @Valid ChangeStatusTodoDto newStatus){
         try{
-            return ResponseEntity.ok(taskService.updateTaskStatus(id, newTask));
+            return ResponseEntity.ok(taskService.updateTaskStatus(id, newStatus));
         }catch (Exception e){
             return ResponseEntity.badRequest().body("Something wrong.");
         }
     }
 
     @PatchMapping("/text/{id}")
-    public ResponseEntity updateTaskText(@PathVariable Long id, @RequestBody TaskEntity newTask){
+    public ResponseEntity updateTaskText(@PathVariable Long id, @RequestBody @Valid ChangeTextTodoDto newText){
         try{
-            return ResponseEntity.ok(taskService.updateTaskText(id, newTask));
+            return ResponseEntity.ok(taskService.updateTaskText(id, newText));
         }catch (Exception e){
             return ResponseEntity.badRequest().body("Something wrong.");
         }
     }
 
     @PatchMapping
-    public ResponseEntity updateStatusAllTasks(@RequestBody TaskEntity newTask){
+    public ResponseEntity updateStatusAllTasks(@RequestBody @Valid ChangeStatusTodoDto newStatus){
         try{
-            return ResponseEntity.ok(taskService.updateStatusAllTasks(newTask));
+            return ResponseEntity.ok(taskService.updateStatusAllTasks(newStatus));
         }catch (Exception e){
             return ResponseEntity.badRequest().body("Something wrong.");
         }
