@@ -1,6 +1,7 @@
 package net.dunice.basic_server.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import net.dunice.basic_server.constants.ValidationConstants;
 import net.dunice.basic_server.dto.ChangeStatusTodoDto;

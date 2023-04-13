@@ -1,10 +1,12 @@
 package net.dunice.basic_server.exception;
 
 import net.dunice.basic_server.constants.ErrorCodes;
+import net.dunice.basic_server.constants.ValidationConstants;
 import net.dunice.basic_server.dto.BaseSuccessResponse;
 import net.dunice.basic_server.dto.CustomSuccessResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -31,9 +33,11 @@ public class CustomExceptionHandler {
                                                                         HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(CustomException.class)
-    public ResponseEntity handle(CustomException exception){
-        return new ResponseEntity(BaseSuccessResponse.getBadResponse(exception.getErrorCode()),
-                HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity handle(HttpMessageNotReadableException exception){
+        String message = ValidationConstants.HTTP_MESSAGE_NOT_READABLE_EXCEPTION;
+        return new ResponseEntity(BaseSuccessResponse.getBadResponse(ErrorCodes.getErrorCode(message)),
+                                                                    HttpStatus.BAD_REQUEST);
     }
+
 }

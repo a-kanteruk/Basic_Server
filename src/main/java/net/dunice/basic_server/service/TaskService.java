@@ -18,8 +18,6 @@ public class TaskService {
     private TaskRepo taskRepo;
 
     public CustomSuccessResponse  addTask(CreateTodoDto task) throws CreatePostException {
-//        if (task.getText().isEmpty()) {throw new CreatePostException(ValidationConstants.TODO_TEXT_NOT_NULL);}
-
         TaskEntity newTask = TaskEntity.createNewTask(task);
         taskRepo.save(newTask);
         return CustomSuccessResponse.getRequestWithData(newTask);
@@ -43,9 +41,6 @@ public class TaskService {
 
     public BaseSuccessResponse updateTaskStatus(Long id, ChangeStatusTodoDto status) throws CustomException, CustomExceptionBoolean {
         taskRepo.findById(id).orElseThrow( () -> new CustomException(ValidationConstants.TASK_NOT_FOUND));
-        if (!(status.getStatus() instanceof Boolean)){
-            throw new CustomExceptionBoolean(ValidationConstants.HTTP_MESSAGE_NOT_READABLE_EXCEPTION);
-        }
         TaskEntity someTask = taskRepo.findById(id).get();
         someTask.setStatus(status.getStatus());
         taskRepo.save(someTask);
