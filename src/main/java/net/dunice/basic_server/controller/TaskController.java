@@ -1,10 +1,14 @@
 package net.dunice.basic_server.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import net.dunice.basic_server.constants.ValidationConstants;
 import net.dunice.basic_server.dto.ChangeStatusTodoDto;
 import net.dunice.basic_server.dto.ChangeTextTodoDto;
 import net.dunice.basic_server.dto.CreateTodoDto;
-import net.dunice.basic_server.exception.UncorrectedIdException;
+import net.dunice.basic_server.exception.CreatePostException;
+import net.dunice.basic_server.exception.CustomException;
+import net.dunice.basic_server.exception.CustomExceptionBoolean;
 import net.dunice.basic_server.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -18,7 +22,7 @@ public class TaskController {
     private TaskService taskService;
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity addTask(@RequestBody @Valid CreateTodoDto task){
+    public ResponseEntity addTask(@RequestBody @Valid CreateTodoDto task) throws CreatePostException {
             return ResponseEntity.ok(taskService.addTask(task));
     }
 
@@ -28,11 +32,11 @@ public class TaskController {
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity deleteTask(@PathVariable Long id) throws UncorrectedIdException {
+    public ResponseEntity deleteTask(@Valid @PathVariable @Positive(message = ValidationConstants.ID_MUST_BE_POSITIVE) Long id) throws CustomException {
             return ResponseEntity.ok(taskService.deleteTask(id));
     }
 
-    @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping
     public ResponseEntity deleteAllTasks(){
             return ResponseEntity.ok(taskService.deleteAllTasks());
     }
@@ -40,14 +44,15 @@ public class TaskController {
     @PatchMapping(value = "/status/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateTaskStatus(@PathVariable Long id,
                                            @RequestBody @Valid ChangeStatusTodoDto newStatus)
-                                            throws UncorrectedIdException {
+                                            throws CustomException, CustomExceptionBoolean {
+
             return ResponseEntity.ok(taskService.updateTaskStatus(id, newStatus));
     }
 
     @PatchMapping(value = "/text/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateTaskText(@PathVariable Long id,
                                          @RequestBody @Valid ChangeTextTodoDto newText)
-                                        throws UncorrectedIdException {
+                                        throws CustomException {
             return ResponseEntity.ok(taskService.updateTaskText(id, newText));
     }
 

@@ -59,16 +59,16 @@ public enum ErrorCodes {
 
     private final Integer code;
     private final String message;
-    private static final Map<String, ErrorCodes> MAP_CODE;
+    private static final Map<String, Integer> MAP_CODE;
 
     static {
-        MAP_CODE = new HashMap<>();
+        MAP_CODE = new HashMap<String, Integer>();
         for (ErrorCodes v : ErrorCodes.values()) {
-            MAP_CODE.put(v.message, v);
+            MAP_CODE.put(v.message, v.code);
         }
     }
 
-    public static ErrorCodes getErrorCode(String message) {
+    public static Integer getErrorCode(String message) {
         return MAP_CODE.get(message);
     }
 }
