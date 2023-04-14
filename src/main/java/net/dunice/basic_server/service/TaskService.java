@@ -8,8 +8,14 @@ import net.dunice.basic_server.exception.CustomException;
 import net.dunice.basic_server.exception.CustomExceptionBoolean;
 import net.dunice.basic_server.repository.TaskRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.awt.print.Pageable;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -23,8 +29,15 @@ public class TaskService {
         return CustomSuccessResponse.getRequestWithData(newTask);
     }
 
-    public TaskEntity getTask(Long id){
-            return taskRepo.findById(id).get();
+    public CustomSuccessResponse getTaskPaginate(int page, int perPage, Boolean status){
+        List<TaskEntity> entities;
+
+        if (status == null){
+            entities = taskRepo.findAll(PageRequest.of(page, perPage)).getContent();
+        } else {
+            entities = taskRepo.findAllByStatus(status);
+        }
+        return CustomSuccessResponse.getRequestWithData(GetNewsDto.CreateNewsDto(entities));
     }
 
     public BaseSuccessResponse deleteTask(Long id) throws CustomException {
@@ -33,9 +46,9 @@ public class TaskService {
         return BaseSuccessResponse.getOkResponse();
     }
 
-    @Transactional
+//    @Transactional
     public BaseSuccessResponse deleteAllTasks(){
-        taskRepo.deleteAllReady();
+        taskRepo.deleteAllByStatus(true);
         return BaseSuccessResponse.getOkResponse();
     }
 

@@ -1,12 +1,12 @@
 package net.dunice.basic_server.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import net.dunice.basic_server.constants.ValidationConstants;
-import net.dunice.basic_server.dto.ChangeStatusTodoDto;
-import net.dunice.basic_server.dto.ChangeTextTodoDto;
-import net.dunice.basic_server.dto.CreateTodoDto;
+import net.dunice.basic_server.dto.*;
 import net.dunice.basic_server.exception.CreatePostException;
 import net.dunice.basic_server.exception.CustomException;
 import net.dunice.basic_server.exception.CustomExceptionBoolean;
@@ -14,8 +14,10 @@ import net.dunice.basic_server.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Validated
 @RestController
 @RequestMapping("/v1/todo")
 public class TaskController {
@@ -28,16 +30,30 @@ public class TaskController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getTask(@RequestParam Long id){
-            return ResponseEntity.ok(taskService.getTask(id));
+    public ResponseEntity getTaskPaginate(
+            @RequestParam
+            @NotNull(message = ValidationConstants.PARAM_PAGE_NOT_NULL)
+            @Positive(message = ValidationConstants.TASKS_PAGE_GREATER_OR_EQUAL_1)
+            @Max(message = ValidationConstants.TASKS_PAGE_GREATER_OR_EQUAL_1, value = Integer.MAX_VALUE)
+            @Min(message = ValidationConstants.TASKS_PAGE_GREATER_OR_EQUAL_1, value = 1)
+            Integer page,
+            @RequestParam
+            @NotNull(message = ValidationConstants.PARAM_PER_PAGE_NOT_NULL)
+            @Positive(message = ValidationConstants.TASKS_PER_PAGE_GREATER_OR_EQUAL_1)
+            @Max(message = ValidationConstants.TASKS_PER_PAGE_LESS_OR_EQUAL_100, value = 100)
+            @Min(message = ValidationConstants.TASKS_PER_PAGE_GREATER_OR_EQUAL_1, value = 1)
+            Integer perPage, Boolean status){
+            return ResponseEntity.ok(taskService.getTaskPaginate(page, perPage, status));
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity deleteTask(@Valid @PathVariable @Positive(message = ValidationConstants.ID_MUST_BE_POSITIVE) Long id) throws CustomException {
+    public ResponseEntity deleteTask(@Valid @PathVariable @Positive(message = ValidationConstants
+                                                                    .ID_MUST_BE_POSITIVE) Long id)
+                                                                                        throws CustomException {
             return ResponseEntity.ok(taskService.deleteTask(id));
     }
 
-    @DeleteMapping
+    @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteAllTasks(){
             return ResponseEntity.ok(taskService.deleteAllTasks());
     }

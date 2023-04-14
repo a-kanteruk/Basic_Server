@@ -1,5 +1,6 @@
 package net.dunice.basic_server.exception;
 
+import jakarta.validation.ConstraintViolationException;
 import net.dunice.basic_server.constants.ErrorCodes;
 import net.dunice.basic_server.constants.ValidationConstants;
 import net.dunice.basic_server.dto.BaseSuccessResponse;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class CustomExceptionHandler {
@@ -38,6 +40,16 @@ public class CustomExceptionHandler {
         String message = ValidationConstants.HTTP_MESSAGE_NOT_READABLE_EXCEPTION;
         return new ResponseEntity(BaseSuccessResponse.getBadResponse(ErrorCodes.getErrorCode(message)),
                                                                     HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity handle(ConstraintViolationException exception){
+        List<Integer> codes = exception.getConstraintViolations()
+                                        .stream()
+                                        .map(x -> ErrorCodes.getErrorCode(x.getMessage()))
+                                        .collect(Collectors.toList());
+        return new ResponseEntity(CustomSuccessResponse.getBadCustomResponse(codes.get(0), codes),
+                HttpStatus.BAD_REQUEST);
     }
 
 }
