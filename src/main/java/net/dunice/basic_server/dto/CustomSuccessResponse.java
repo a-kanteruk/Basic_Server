@@ -20,7 +20,7 @@ public class CustomSuccessResponse<T> {
                 .setSuccess(true);
     }
 
-    public static <T> CustomSuccessResponse getBadCustomResponse(int statusCode, List<Integer> codes){
+    public static CustomSuccessResponse getBadCustomResponse(int statusCode, List<Integer> codes){
         return new CustomSuccessResponse<>()
                 .setStatusCode(statusCode)
                 .setSuccess(true)

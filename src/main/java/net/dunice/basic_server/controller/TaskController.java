@@ -5,12 +5,12 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+
 import net.dunice.basic_server.constants.ValidationConstants;
 import net.dunice.basic_server.dto.*;
-import net.dunice.basic_server.exception.CreatePostException;
 import net.dunice.basic_server.exception.CustomException;
-import net.dunice.basic_server.exception.CustomExceptionBoolean;
 import net.dunice.basic_server.service.TaskService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ public class TaskController {
     private TaskService taskService;
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity addTask(@RequestBody @Valid CreateTodoDto task) throws CreatePostException {
+    public ResponseEntity addTask(@RequestBody @Valid CreateTodoDto task) {
             return ResponseEntity.ok(taskService.addTask(task));
     }
 
@@ -61,7 +61,7 @@ public class TaskController {
     @PatchMapping(value = "/status/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateTaskStatus(@PathVariable Long id,
                                            @RequestBody @Valid ChangeStatusTodoDto newStatus)
-                                            throws CustomException, CustomExceptionBoolean {
+                                            throws CustomException {
 
             return ResponseEntity.ok(taskService.updateTaskStatus(id, newStatus));
     }
@@ -74,7 +74,7 @@ public class TaskController {
     }
 
     @PatchMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateStatusAllTasks(@RequestBody @Valid ChangeStatusTodoDto newStatus){
+    public ResponseEntity updateStatusAllTasks(@RequestBody @Valid ChangeStatusTodoDto newStatus) {
             return ResponseEntity.ok(taskService.updateStatusAllTasks(newStatus));
     }
 }

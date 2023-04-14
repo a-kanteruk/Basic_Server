@@ -3,9 +3,7 @@ package net.dunice.basic_server.service;
 import net.dunice.basic_server.constants.ValidationConstants;
 import net.dunice.basic_server.dto.*;
 import net.dunice.basic_server.entity.TaskEntity;
-import net.dunice.basic_server.exception.CreatePostException;
 import net.dunice.basic_server.exception.CustomException;
-import net.dunice.basic_server.exception.CustomExceptionBoolean;
 import net.dunice.basic_server.repository.TaskRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -15,19 +13,18 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 
-
 @Service
 public class TaskService {
     @Autowired
     private TaskRepo taskRepo;
 
-    public CustomSuccessResponse  addTask(CreateTodoDto task) throws CreatePostException {
+    public CustomSuccessResponse addTask(CreateTodoDto task) {
         TaskEntity newTask = TaskEntity.createNewTask(task);
         taskRepo.save(newTask);
         return CustomSuccessResponse.getRequestWithData(newTask);
     }
 
-    public CustomSuccessResponse getTaskPaginate(int page, int perPage, Boolean status){
+    public CustomSuccessResponse getTaskPaginate(int page, int perPage, Boolean status) {
         List<TaskEntity> entities;
 
         if (status == null){
@@ -45,12 +42,12 @@ public class TaskService {
     }
 
     @Transactional
-    public BaseSuccessResponse deleteAllTasks(){
+    public BaseSuccessResponse deleteAllTasks() {
         taskRepo.deleteAllByStatus(true);
         return BaseSuccessResponse.getOkResponse();
     }
 
-    public BaseSuccessResponse updateTaskStatus(Long id, ChangeStatusTodoDto status) throws CustomException, CustomExceptionBoolean {
+    public BaseSuccessResponse updateTaskStatus(Long id, ChangeStatusTodoDto status) throws CustomException {
         taskRepo.findById(id).orElseThrow( () -> new CustomException(ValidationConstants.TASK_NOT_FOUND));
         TaskEntity someTask = taskRepo.findById(id).get();
         someTask.setStatus(status.getStatus());
@@ -66,7 +63,7 @@ public class TaskService {
         return BaseSuccessResponse.getOkResponse();
     }
 
-    public BaseSuccessResponse updateStatusAllTasks(ChangeStatusTodoDto task){
+    public BaseSuccessResponse updateStatusAllTasks(ChangeStatusTodoDto task) {
             for (TaskEntity item: taskRepo.findAll()){
                 item.setStatus(task.getStatus());
                 taskRepo.save(item);
