@@ -53,7 +53,7 @@ public class TaskController {
             return ResponseEntity.ok(taskService.deleteTask(id));
     }
 
-    @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping
     public ResponseEntity deleteAllTasks(){
             return ResponseEntity.ok(taskService.deleteAllTasks());
     }

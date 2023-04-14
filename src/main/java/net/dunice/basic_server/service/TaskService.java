@@ -8,14 +8,12 @@ import net.dunice.basic_server.exception.CustomException;
 import net.dunice.basic_server.exception.CustomExceptionBoolean;
 import net.dunice.basic_server.repository.TaskRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 
 @Service
@@ -46,7 +44,7 @@ public class TaskService {
         return BaseSuccessResponse.getOkResponse();
     }
 
-//    @Transactional
+    @Transactional
     public BaseSuccessResponse deleteAllTasks(){
         taskRepo.deleteAllByStatus(true);
         return BaseSuccessResponse.getOkResponse();
