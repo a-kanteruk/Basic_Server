@@ -1,16 +1,22 @@
 package net.dunice.basic_server.service;
 
+import java.util.List;
+
 import net.dunice.basic_server.constants.ValidationConstants;
-import net.dunice.basic_server.dto.*;
+import net.dunice.basic_server.dto.BaseSuccessResponse;
+import net.dunice.basic_server.dto.ChangeStatusTodoDto;
+import net.dunice.basic_server.dto.ChangeTextTodoDto;
+import net.dunice.basic_server.dto.CreateTodoDto;
+import net.dunice.basic_server.dto.CustomSuccessResponse;
+import net.dunice.basic_server.dto.GetNewsDto;
 import net.dunice.basic_server.entity.TaskEntity;
 import net.dunice.basic_server.exception.CustomException;
 import net.dunice.basic_server.repository.TaskRepo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 
 @Service
@@ -27,16 +33,17 @@ public class TaskService {
     public CustomSuccessResponse getTaskPaginate(int page, int perPage, Boolean status) {
         List<TaskEntity> entities;
 
-        if (status == null){
+        if (status == null) {
             entities = taskRepo.findAll(PageRequest.of(page, perPage)).getContent();
-        } else {
+        }
+        else {
             entities = taskRepo.findAllByStatus(status);
         }
         return CustomSuccessResponse.getRequestWithData(GetNewsDto.CreateNewsDto(entities));
     }
 
     public BaseSuccessResponse deleteTask(Long id) throws CustomException {
-        taskRepo.findById(id).orElseThrow( () -> new CustomException(ValidationConstants.ID_MUST_BE_POSITIVE));
+        taskRepo.findById(id).orElseThrow(() -> new CustomException(ValidationConstants.ID_MUST_BE_POSITIVE));
         taskRepo.deleteById(id);
         return BaseSuccessResponse.getOkResponse();
     }
@@ -48,7 +55,7 @@ public class TaskService {
     }
 
     public BaseSuccessResponse updateTaskStatus(Long id, ChangeStatusTodoDto status) throws CustomException {
-        taskRepo.findById(id).orElseThrow( () -> new CustomException(ValidationConstants.TASK_NOT_FOUND));
+        taskRepo.findById(id).orElseThrow(() -> new CustomException(ValidationConstants.TASK_NOT_FOUND));
         TaskEntity someTask = taskRepo.findById(id).get();
         someTask.setStatus(status.getStatus());
         taskRepo.save(someTask);
@@ -56,7 +63,7 @@ public class TaskService {
     }
 
     public BaseSuccessResponse updateTaskText(Long id, ChangeTextTodoDto text) throws CustomException {
-        taskRepo.findById(id).orElseThrow( () -> new CustomException(ValidationConstants.TASK_NOT_FOUND));
+        taskRepo.findById(id).orElseThrow(() -> new CustomException(ValidationConstants.TASK_NOT_FOUND));
         TaskEntity someTask = taskRepo.findById(id).get();
         someTask.setText(text.getText());
         taskRepo.save(someTask);
@@ -64,7 +71,7 @@ public class TaskService {
     }
 
     public BaseSuccessResponse updateStatusAllTasks(ChangeStatusTodoDto task) {
-            for (TaskEntity item: taskRepo.findAll()){
+            for (TaskEntity item: taskRepo.findAll()) {
                 item.setStatus(task.getStatus());
                 taskRepo.save(item);
             }

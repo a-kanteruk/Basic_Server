@@ -1,9 +1,9 @@
 package net.dunice.basic_server.dto;
 
+import java.util.List;
+
 import lombok.Data;
 import lombok.experimental.Accessors;
-
-import java.util.List;
 
 @Data
 @Accessors(chain = true)
@@ -13,14 +13,14 @@ public class CustomSuccessResponse<T> {
     boolean success;
     List<Integer> codes;
 
-    public static <T> CustomSuccessResponse getRequestWithData (T data){
+    public static <T> CustomSuccessResponse getRequestWithData(T data) {
         return new CustomSuccessResponse<>()
                 .setData(data)
                 .setStatusCode(1)
                 .setSuccess(true);
     }
 
-    public static CustomSuccessResponse getBadCustomResponse(int statusCode, List<Integer> codes){
+    public static CustomSuccessResponse getBadCustomResponse(int statusCode, List<Integer> codes) {
         return new CustomSuccessResponse<>()
                 .setStatusCode(statusCode)
                 .setSuccess(true)

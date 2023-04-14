@@ -1,5 +1,7 @@
 package net.dunice.basic_server.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,7 +13,6 @@ import net.dunice.basic_server.constants.ValidationConstants;
 import net.dunice.basic_server.dto.CreateTodoDto;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -28,7 +29,7 @@ public class TaskEntity {
     @UpdateTimestamp
     private LocalDateTime updateTime;
 
-    public static TaskEntity createNewTask(CreateTodoDto task){
+    public static TaskEntity createNewTask(CreateTodoDto task) {
         return new TaskEntity().setText(task.getText());
     }
 }

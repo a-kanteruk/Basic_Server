@@ -5,9 +5,10 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-
 import net.dunice.basic_server.constants.ValidationConstants;
-import net.dunice.basic_server.dto.*;
+import net.dunice.basic_server.dto.ChangeStatusTodoDto;
+import net.dunice.basic_server.dto.ChangeTextTodoDto;
+import net.dunice.basic_server.dto.CreateTodoDto;
 import net.dunice.basic_server.exception.CustomException;
 import net.dunice.basic_server.service.TaskService;
 
@@ -15,7 +16,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 
 @Validated
 @RestController
@@ -42,7 +52,7 @@ public class TaskController {
             @Positive(message = ValidationConstants.TASKS_PER_PAGE_GREATER_OR_EQUAL_1)
             @Max(message = ValidationConstants.TASKS_PER_PAGE_LESS_OR_EQUAL_100, value = 100)
             @Min(message = ValidationConstants.TASKS_PER_PAGE_GREATER_OR_EQUAL_1, value = 1)
-            Integer perPage, Boolean status){
+            Integer perPage, Boolean status) {
             return ResponseEntity.ok(taskService.getTaskPaginate(page, perPage, status));
     }
 
@@ -54,7 +64,7 @@ public class TaskController {
     }
 
     @DeleteMapping
-    public ResponseEntity deleteAllTasks(){
+    public ResponseEntity deleteAllTasks() {
             return ResponseEntity.ok(taskService.deleteAllTasks());
     }
 
