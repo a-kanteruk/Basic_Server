@@ -3,7 +3,6 @@ package net.dunice.basic_server.exception;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 import jakarta.validation.ConstraintViolationException;
 import net.dunice.basic_server.constants.ErrorCodes;
 import net.dunice.basic_server.constants.ValidationConstants;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CustomExceptionHandler {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity handle(CustomException exception) {
-        return new ResponseEntity(BaseSuccessResponse.getBadResponse(exception.getErrorCode()),
+        return new ResponseEntity(BaseSuccessResponse.getBadResponse(ErrorCodes.getErrorCode(exception.getMessage())),
                                                                         HttpStatus.BAD_REQUEST);
     }
 
