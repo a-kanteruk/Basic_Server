@@ -7,5 +7,5 @@ import net.dunice.basic_server.constants.ValidationConstants;
 @Data
 public class ChangeTextTodoDto {
     @Size(min = 3, max = 160, message = ValidationConstants.TODO_TEXT_SIZE_NOT_VALID)
-    String text;
+    private String text;
 }

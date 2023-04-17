@@ -32,18 +32,16 @@ public class TaskService {
 
     public CustomSuccessResponse getTaskPaginate(int page, int perPage, Boolean status) {
         List<TaskEntity> entities;
-
         if (status == null) {
             entities = taskRepo.findAll(PageRequest.of(page, perPage)).getContent();
         }
         else {
             entities = taskRepo.findAllByStatus(status);
         }
-        return CustomSuccessResponse.getRequestWithData(GetNewsDto.CreateNewsDto(entities));
+        return CustomSuccessResponse.getRequestWithData(GetNewsDto.createNewsDto(entities));
     }
 
-    public BaseSuccessResponse deleteTask(Long id) throws CustomException {
-        taskRepo.findById(id).orElseThrow(() -> new CustomException(ValidationConstants.ID_MUST_BE_POSITIVE));
+    public BaseSuccessResponse deleteTask(Long id) {
         taskRepo.deleteById(id);
         return BaseSuccessResponse.getOkResponse();
     }
@@ -54,27 +52,25 @@ public class TaskService {
         return BaseSuccessResponse.getOkResponse();
     }
 
-    public BaseSuccessResponse updateTaskStatus(Long id, ChangeStatusTodoDto status) throws CustomException {
-        taskRepo.findById(id).orElseThrow(() -> new CustomException(ValidationConstants.TASK_NOT_FOUND));
-        TaskEntity someTask = taskRepo.findById(id).get();
-        someTask.setStatus(status.getStatus());
-        taskRepo.save(someTask);
+    public BaseSuccessResponse updateTaskStatus(Long id, ChangeStatusTodoDto status) {
+        taskRepo.save(taskRepo.findById(id)
+                              .orElseThrow(() -> new CustomException(ValidationConstants.TASK_NOT_FOUND))
+                              .setStatus(status.getStatus())
+                     );
         return BaseSuccessResponse.getOkResponse();
     }
 
-    public BaseSuccessResponse updateTaskText(Long id, ChangeTextTodoDto text) throws CustomException {
-        taskRepo.findById(id).orElseThrow(() -> new CustomException(ValidationConstants.TASK_NOT_FOUND));
-        TaskEntity someTask = taskRepo.findById(id).get();
-        someTask.setText(text.getText());
-        taskRepo.save(someTask);
+    public BaseSuccessResponse updateTaskText(Long id, ChangeTextTodoDto text) {
+        taskRepo.save(taskRepo.findById(id)
+                              .orElseThrow(() -> new CustomException(ValidationConstants.TASK_NOT_FOUND))
+                              .setText(text.getText())
+                     );
         return BaseSuccessResponse.getOkResponse();
     }
 
+    @Transactional
     public BaseSuccessResponse updateStatusAllTasks(ChangeStatusTodoDto task) {
-            for (TaskEntity item: taskRepo.findAll()) {
-                item.setStatus(task.getStatus());
-                taskRepo.save(item);
-            }
-            return BaseSuccessResponse.getOkResponse();
+        taskRepo.updateAllStatus(task.getStatus());
+        return BaseSuccessResponse.getOkResponse();
     }
 }

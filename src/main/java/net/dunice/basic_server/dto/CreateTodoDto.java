@@ -11,5 +11,5 @@ public class CreateTodoDto {
     @NotNull(message = ValidationConstants.TODO_TEXT_NOT_NULL)
     @NotBlank(message = ValidationConstants.TODO_TEXT_NOT_NULL)
     @Size(min = 3, max = 160, message = ValidationConstants.TODO_TEXT_SIZE_NOT_VALID)
-    String text;
+    private String text;
 }

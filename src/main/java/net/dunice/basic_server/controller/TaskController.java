@@ -9,7 +9,6 @@ import net.dunice.basic_server.constants.ValidationConstants;
 import net.dunice.basic_server.dto.ChangeStatusTodoDto;
 import net.dunice.basic_server.dto.ChangeTextTodoDto;
 import net.dunice.basic_server.dto.CreateTodoDto;
-import net.dunice.basic_server.exception.CustomException;
 import net.dunice.basic_server.service.TaskService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,8 +57,7 @@ public class TaskController {
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteTask(@Valid @PathVariable @Positive(message = ValidationConstants
-                                                                    .ID_MUST_BE_POSITIVE) Long id)
-                                                                                        throws CustomException {
+                                                                    .ID_MUST_BE_POSITIVE) Long id) {
             return ResponseEntity.ok(taskService.deleteTask(id));
     }
 
@@ -70,16 +68,14 @@ public class TaskController {
 
     @PatchMapping(value = "/status/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateTaskStatus(@PathVariable Long id,
-                                           @RequestBody @Valid ChangeStatusTodoDto newStatus)
-                                            throws CustomException {
+                                           @RequestBody @Valid ChangeStatusTodoDto newStatus) {
 
             return ResponseEntity.ok(taskService.updateTaskStatus(id, newStatus));
     }
 
     @PatchMapping(value = "/text/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateTaskText(@PathVariable Long id,
-                                         @RequestBody @Valid ChangeTextTodoDto newText)
-                                        throws CustomException {
+                                         @RequestBody @Valid ChangeTextTodoDto newText) {
             return ResponseEntity.ok(taskService.updateTaskText(id, newText));
     }
 
