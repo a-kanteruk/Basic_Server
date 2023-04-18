@@ -20,7 +20,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class TaskEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Positive(message = ValidationConstants.ID_MUST_BE_POSITIVE)
     private Long id;
     private String text;
     private Boolean status = false;

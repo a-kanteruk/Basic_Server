@@ -47,8 +47,7 @@ public class TaskService {
         return CustomSuccessResponse.getRequestWithData(new GetNewsDto().setContent(entities)
                                                         .setNotReady(countedTasks.getFalseTasks())
                                                         .setReady(countedTasks.getTrueTasks())
-                                                        .setNumberOfElements(countedTasks.getAllTasks())
-                                                        );
+                                                        .setNumberOfElements(countedTasks.getAllTasks()));
     }
 
     public BaseSuccessResponse deleteTask(Long id) {
