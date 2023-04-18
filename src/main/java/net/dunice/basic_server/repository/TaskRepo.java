@@ -25,4 +25,8 @@ public interface TaskRepo extends JpaRepository<TaskEntity, Long> {
     @Modifying
     @Query("UPDATE TaskEntity t SET t.status = :status")
     void updateAllStatus(@Param("status") Boolean status);
+
+    @Query(value = "SELECT COUNT(*) AS AllTasks, SUM(CASE WHEN status = true THEN 1 ELSE 0 END) AS TrueTasks, " +
+            "SUM(CASE WHEN status = false THEN 1 ELSE 0 END) AS FalseTasks FROM task_entity", nativeQuery = true)
+    TaskView countTasks();
 }

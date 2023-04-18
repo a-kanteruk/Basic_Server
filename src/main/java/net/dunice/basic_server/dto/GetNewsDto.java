@@ -13,13 +13,4 @@ public class GetNewsDto {
     Long notReady;
     Long numberOfElements;
     Long ready;
-
-    public static GetNewsDto createNewsDto(List<TaskEntity> tasks) {
-        Long notReady = tasks.stream().filter(x -> !x.getStatus()).count();
-        Long ready = tasks.stream().filter(x -> x.getStatus()).count();
-        return new GetNewsDto().setContent(tasks)
-                                .setNotReady(notReady)
-                                .setReady(ready)
-                                .setNumberOfElements(tasks.stream().count());
-    }
 }

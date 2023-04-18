@@ -12,9 +12,12 @@ import net.dunice.basic_server.dto.GetNewsDto;
 import net.dunice.basic_server.entity.TaskEntity;
 import net.dunice.basic_server.exception.CustomException;
 import net.dunice.basic_server.repository.TaskRepo;
+import net.dunice.basic_server.repository.TaskView;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,14 +34,21 @@ public class TaskService {
     }
 
     public CustomSuccessResponse getTaskPaginate(int page, int perPage, Boolean status) {
+
+        Pageable pageable = PageRequest.of(page - 1, perPage, Sort.by("createdAt").descending());
         List<TaskEntity> entities;
         if (status == null) {
-            entities = taskRepo.findAll(PageRequest.of(page, perPage)).getContent();
+            entities = taskRepo.findAll(pageable).getContent();
         }
         else {
             entities = taskRepo.findAllByStatus(status);
         }
-        return CustomSuccessResponse.getRequestWithData(GetNewsDto.createNewsDto(entities));
+        TaskView countedTasks = taskRepo.countTasks();
+        return CustomSuccessResponse.getRequestWithData(new GetNewsDto().setContent(entities)
+                                                        .setNotReady(countedTasks.getFalseTasks())
+                                                        .setReady(countedTasks.getTrueTasks())
+                                                        .setNumberOfElements(countedTasks.getAllTasks())
+                                                        );
     }
 
     public BaseSuccessResponse deleteTask(Long id) {

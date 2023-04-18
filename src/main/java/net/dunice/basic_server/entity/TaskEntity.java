@@ -25,9 +25,9 @@ public class TaskEntity {
     private String text;
     private Boolean status = false;
     @CreationTimestamp
-    private LocalDateTime creationTime;
+    private LocalDateTime createdAt;
     @UpdateTimestamp
-    private LocalDateTime updateTime;
+    private LocalDateTime updatedAt;
 
     public static TaskEntity createNewTask(CreateTodoDto task) {
         return new TaskEntity().setText(task.getText());
